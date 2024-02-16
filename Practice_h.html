@@ -124,24 +124,26 @@
                     totalScore + Strike();
                 }
                 else if (firstTryScore < 10 && 10 - firstTryScore) { //스페어 경우 계산
-                    Spare();
+                    totalScore + Spare();
                 }
                 else { //다음에는 더 잘칠수 있을 것! 일반점수
 
                 }
             }
-            // console.log(Game);
+            console.log(Game);
         }
 
         function calcBonusScoreSum() {
 
         }
         function Strike(firstTryScore) {
-            return framescore = framescore + firstTryScore;
+            let sum = framescore + firstTryScore;
+            return sum;
         }
 
         function Spare(firstTryScore, secondTryScore) {
-
+            let sum = framescore + firstTryScore + secondTryScore
+            return sum;
         }
 
         function Openframe(firstTryScore, secondTryScore) {
