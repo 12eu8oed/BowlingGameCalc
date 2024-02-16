@@ -64,43 +64,24 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td></td>
             </tr><!-- 첫번째 줄 끝 -->
         </table>
     </div>
-    <!-- 다른 예시 테이블
-    <table>
-        <tr>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
-            <th>7</th>
-            <th>8</th>
-            <th>9</th>
-            <th class="total">total</th>
-        </tr>
-        <tr>
-            <td colspan="2"></td>
-            <td colspan="2"></td>
-            <td></td>
-            <td colspan="2"></td>
-            <td colspan="2" class="total"></td>
-        </tr>
-    </table> -->
+
+    <script> //배열에 랜덤으로 점수 받아서 만들려고 했는데 일단 보류
+        const array = [0,0,0,0,0,0,0,0,0,0];
+        for (let i = 0; i < array.length; i++) {
+            array[i] = Math.floor(Math.random() * 11);
+            console.log(array[i], i+"번째입니다.");
+        }
+    </script>
 
     <script>
-        // window.onload = function () {
-        //     test(); // 페이지가 완전히 로드됐을 때 test 함수 실행
-        // };
-        function test() {
-            let step;
-            for (step = 0; step < 5; step++) {
-                // Runs 5 times, with values of step 0 through 4.
-                console.log("Walking east one step");
-            }
-        }
+        const randomScore = Math.floor(Math.random() * 11); //0점 부터 10점 까지의 점수 생성
+        // console.log(randomScore);
+        
+        calcBowlingScore();
 
         function showBowlingTable() { //이 메소드는 게임수를 입력 받으면 그 게임 수 만큼 화면에 테이블이 나오게 바꿀 예정
             // 입력 필드에서 값 가져오기
@@ -117,20 +98,36 @@
         }
 
         function calcBowlingScore() {
+
             const bowlingTable = []; //프레임 배열
+
             let totalScore = 0; //합산한 점수
+
             let firstTryScore = 0; //첫 투구 점수
             let secondTryScore = 0; //두번째 투구 점수
-            let score = 0;
 
-            for (let try=1; try < 10; try++) {
+            let framescore = 0; //첫 투구와 두번째 투구를 합한 점수
+
+            let strike = true; //스트라이크 
+            let spare = true; //스페어
+            let openframe = true; //오픈프레임
+
+            for (Game = 1; Game < 11; Game++) { //볼링 게임이 총 10번 
+                if (Game == 10) { // 보너스 게임 판별
+                    
+                }
+
+                if (firstTryScore == 10) { //스트라이크 던진 경우
+                    Strike();
+                }
+
 
             }
-
+            // console.log(Game);
         }
 
         function Strike() {
-            return
+            
         }
 
         function Spare() {
