@@ -13,6 +13,8 @@
         function rollBall() {
             // 여기에 볼링 공 굴리기 로직 추가
             var pinsDown = Math.floor(Math.random() * 11); // 0에서 10 사이의 랜덤 숫자
+            var flag = flag+1;
+            console.log(flag);
             document.getElementById("pins").innerHTML = "쓰러진 핀 수: " + pinsDown;
             // 점수 계산 로직 추가
         }
