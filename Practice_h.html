@@ -73,7 +73,7 @@
         const array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < array.length; i++) {
             array[i] = Math.floor(Math.random() * 11);
-            console.log(array[i], (i+1) + "번째 프레임입니다.");
+            console.log(array[i], (i + 1) + "번째 프레임입니다.");
         }
     </script>
 
@@ -92,8 +92,6 @@
             // 입력값에 따라 게임수 결정
             if (inputPlayNum === "hello") {
                 document.getElementById("content").innerHTML = "<p>Hello there! Welcome.</p>";
-            } else if (inputPlayNum === "bye") {
-                document.getElementById("content").innerHTML = "<p>Goodbye! See you again.</p>";
             } else {
                 document.getElementById("content").innerHTML = "<p>Sorry, I don't recognize that word.</p>";
             }
@@ -117,17 +115,17 @@
 
             for (Game = 1; Game < 11; Game++) { //볼링 게임이 총 10번 
                 if (Game == 10) { // 보너스 게임 판별
-                    
+
                 }
 
                 if (firstTryScore == 10) { //스트라이크 던진 경우
-                    totalScore + Strike();
+                    totalScore = totalScore + StrikeCalc();
                 }
-                else if (firstTryScore < 10 && 10 - firstTryScore) { //스페어 경우 계산
-                    totalScore + Spare();
+                else if (firstTryScore < 10 && (10 - firstTryScore) == secondTryScore) { //스페어 경우 첫 투구가 10보다 낮아야 하고, 첫번째 투구와 두번째 투구를 더했을 때 10점이 되어야한다. 
+                    totalScore = totalScore + SpareCalc();
                 }
                 else { //다음에는 더 잘칠수 있을 것! 일반점수
-
+                    totalScore = totalScore + OpenframeCalc();
                 }
             }
             console.log(Game);
@@ -136,17 +134,19 @@
         function calcBonusScoreSum() {
 
         }
-        function Strike(firstTryScore) {
-            let sum = framescore + firstTryScore;
+        function StrikeCalc(firstTryScore) {
+            let sum = 0;
+            sum = framescore + firstTryScore;
             return sum;
         }
 
-        function Spare(firstTryScore, secondTryScore) {
-            let sum = framescore + firstTryScore + secondTryScore
+        function SpareCalc(firstTryScore, secondTryScore) {
+            let sum = 0;
+            sum = framescore + firstTryScore + secondTryScore
             return sum;
         }
 
-        function Openframe(firstTryScore, secondTryScore) {
+        function OpenframeCalc(firstTryScore, secondTryScore) {
 
         }
     </script>
