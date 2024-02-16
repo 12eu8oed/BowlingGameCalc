@@ -30,7 +30,7 @@
 
 <body>
     게임 수 :
-    <input type="text" id="userInput" placeholder="볼링 한사바리 하봅시더이">
+    <input type="text" id="inputPlayNum" placeholder="플레이어 수를 입력해주세요">
     <button onclick="showBowlingTable()">Submit</button>
 
     <!-- 조건에 따라 내용을 보여줄 요소 -->
@@ -70,27 +70,29 @@
     </div>
 
     <script> //배열에 랜덤으로 점수 받아서 만들려고 했는데 일단 보류
-        const array = [0,0,0,0,0,0,0,0,0,0];
+        const array = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         for (let i = 0; i < array.length; i++) {
             array[i] = Math.floor(Math.random() * 11);
-            console.log(array[i], i+"번째입니다.");
+            console.log(array[i], (i+1) + "번째 프레임입니다.");
         }
     </script>
 
     <script>
-        const randomScore = Math.floor(Math.random() * 11); //0점 부터 10점 까지의 점수 생성
+        const randomScoreFirst = Math.floor(Math.random() * 11); //첫 투구시 기본 랜덤 점수(0부터 10까지)
+        const randomScoreSecond = Math.floor(Math.random() * 11);
+
         // console.log(randomScore);
-        
+
         calcBowlingScore();
 
-        function showBowlingTable() { //이 메소드는 게임수를 입력 받으면 그 게임 수 만큼 화면에 테이블이 나오게 바꿀 예정
+        function showBowlingTable() { //입력값에 따라 화면에 테이블이 나오게 한다.
             // 입력 필드에서 값 가져오기
-            let input = document.getElementById("userInput").value;
+            let inputPlayNum = document.getElementById("inputPlayNum").value;
 
             // 입력값에 따라 게임수 결정
-            if (input === "hello") {
+            if (inputPlayNum === "hello") {
                 document.getElementById("content").innerHTML = "<p>Hello there! Welcome.</p>";
-            } else if (input === "bye") {
+            } else if (inputPlayNum === "bye") {
                 document.getElementById("content").innerHTML = "<p>Goodbye! See you again.</p>";
             } else {
                 document.getElementById("content").innerHTML = "<p>Sorry, I don't recognize that word.</p>";
@@ -99,6 +101,7 @@
 
         function calcBowlingScore() {
 
+            //필요한 객체들
             const bowlingTable = []; //프레임 배열
 
             let totalScore = 0; //합산한 점수
@@ -118,23 +121,30 @@
                 }
 
                 if (firstTryScore == 10) { //스트라이크 던진 경우
-                    Strike();
+                    totalScore + Strike();
                 }
+                else if (firstTryScore < 10 && 10 - firstTryScore) { //스페어 경우 계산
+                    Spare();
+                }
+                else { //다음에는 더 잘칠수 있을 것! 일반점수
 
-
+                }
             }
             // console.log(Game);
         }
 
-        function Strike() {
-            
-        }
-
-        function Spare() {
+        function calcBonusScoreSum() {
 
         }
+        function Strike(firstTryScore) {
+            return framescore = framescore + firstTryScore;
+        }
 
-        function Openframe() {
+        function Spare(firstTryScore, secondTryScore) {
+
+        }
+
+        function Openframe(firstTryScore, secondTryScore) {
 
         }
     </script>
