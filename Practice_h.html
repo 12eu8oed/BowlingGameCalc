@@ -1,0 +1,111 @@
+<!DOCTYPE html PUBLIC>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>볼링 테이블 연습</title>
+</head>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+    }
+
+    th,
+    td {
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<body>
+    게임 수 :
+    <input type="text" id="userInput" placeholder="Type something here...">
+    <button onclick="showContent()">Submit</button>
+
+    <!-- 조건에 따라 내용을 보여줄 요소 -->
+    <div id="content"></div>
+
+    <div id="test">
+
+    </div>
+    <table border="1">
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+        <th>10</th>
+        <th>total</th>
+        <tr><!-- 첫번째 줄 시작 -->
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td>점수</td>
+            <td></td>
+        </tr><!-- 첫번째 줄 끝 -->
+    </table>
+
+    <script>
+        function test() {
+            let step;
+            for (step = 0; step < 5; step++) {
+                // Runs 5 times, with values of step 0 through 4.
+                console.log("Walking east one step");
+            }
+        }
+
+        function showContent() {
+            // 입력 필드에서 값 가져오기
+            let input = document.getElementById("userInput").value;
+
+            // 입력값에 따라 다른 내용 보여주기
+            if (input === "hello") {
+                document.getElementById("content").innerHTML = "<p>Hello there! Welcome.</p>";
+            } else if (input === "bye") {
+                document.getElementById("content").innerHTML = "<p>Goodbye! See you again.</p>";
+            } else {
+                document.getElementById("content").innerHTML = "<p>Sorry, I don't recognize that word.</p>";
+            }
+        }
+
+        function calcBowlingScore() {
+
+        }
+
+        function 계산() {
+
+        }
+
+        function 계산() {
+
+        }
+
+        function 계산() {
+
+        }
+
+    </script>
+</body>
+
+</html>
