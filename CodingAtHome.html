@@ -57,8 +57,8 @@
                 if (rolls[rollIndex] == 10) { // [스트라이크]
 
                     //터키 스트라이크 이상 계산
-                    if (rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] == 10) {
-                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; //30점 추가! 대박
+                    if ((rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] == 10) && rollIndex < 15) {
+                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; //30점 추가
                         rollIndex += 2; // 스트라이크 시 다음 프레임으로
 
                     }
@@ -167,6 +167,17 @@
             targetDiv.innerHTML = ''; // 기존 내용을 초기화, 이 코드가 없으면 기존에 테이블 태그로 만들었던 코드밑으로 테이블 생성된다.
 
             for (let i = 0; i < tableNum; i++) {
+
+                // !! <br/> 추가해서 간격 띄우기
+                targetDiv.appendChild(document.createElement('br'));
+
+                // !! 게임수 표시를 위한 div 요소 생성 및 추가
+                const gameNumDiv = document.createElement('div');
+                gameNumDiv.textContent = `게임수: ${i + 1}`; // tableNum 받아서 테이블 출력
+                gameNumDiv.style.marginBottom = '30px'; // 게임수div 와 테이블간 간격띄움
+
+                targetDiv.appendChild(gameNumDiv);
+
                 const scores = generateBowlingScores(); //볼링 점수 생성
                 const frameScores = calculateBowlingScore(scores); //볼링 점수 배열 (쓰러트린 핀의 갯수 + 보너스 점수)
 
@@ -175,7 +186,7 @@
                 const tbody = document.createElement('tbody');
 
                 // 첫 번째 행 (프레임 표시)
-                const firstRow = tbody.insertRow(); // 행 추가 (1행)
+                const firstRow = tbody.insertRow(); // 행 추가 (1행 Start)
                 for (let frame = 1; frame <= 10; frame++) {
                     const cell = firstRow.insertCell();
 
@@ -192,46 +203,66 @@
                 totalCell.textContent = 'Total';
 
                 // 두 번째 행 (투구 점수)
-                const secondRow = tbody.insertRow(); // 행 추가 (2행)
+                const secondRow = tbody.insertRow(); // 행 추가 (2행 Start)
                 for (let roll of scores) {  //scores 배열요소만큼
                     secondRow.insertCell().textContent = roll;
                 }
 
                 //세 번째 행 (프레임별 점수 합산)
-                const thirdRow = tbody.insertRow(); // 행 추가 (3행)
-                for (let frameScore of frameScores) { //frameScores 배열요소만큼  
-                    const cell = thirdRow.insertCell();
-
-                    // 10번째 프레임 점수 3칸으로
-                    if (frameScores[9] == frameScore)
-                        cell.colSpan = 3;
-                    else
-                        cell.colSpan = 2;
-
-                    cell.textContent = frameScore;
-                    console.log(frameScore);
-                }
-
-                // 세 번째 행 (프레임별 점수 합산)
                 // const thirdRow = tbody.insertRow(); // 행 추가 (3행)
-                // for (let i = 0; i < frameScores.length; i++) {
-                //     if (i == 9) {
-                //         const cell = thirdRow.insertCell();
-                //         cell.colSpan = 3;
-                //         cell.textContent = frameScores[i];
+                // for (let frameScore of frameScores) { //frameScores 배열요소만큼  
+                //     const cell = thirdRow.insertCell();
+                //     console.log("cell",cell);
+
+                //     // 마지막 프레임 Nan오류 수정
+                //     if (isNaN(frameScore)) { 
+                //         frameScore = frameScores[frameScores.length - 1];
                 //     }
 
-                //     const cell = thirdRow.insertCell();
-                //     cell.colSpan = 2;
-                //     cell.textContent = frameScores[i];
+                //     // 10번째 프레임 점수 3칸으로
+                //     if (frameScores[9] == frameScore)
+                //         cell.colSpan = 3;
+                //     else
+                //         cell.colSpan = 2;
 
-                //     console.log(i);
+                //     cell.textContent = frameScore;
+                //     console.log(frameScore);
                 // }
 
-                // 마지막 셀에는 총점을 표시합니다.
+                // 세 번째 행 (프레임별 점수 합산)
+                const thirdRow = tbody.insertRow(); // 행 추가 (3행 Start)
+
+                for (let i = 0; i < frameScores.length - 1; i++) {
+                    if (i == 9) {
+                        const cell = thirdRow.insertCell();
+                        cell.colSpan = 3;
+                        cell.textContent = frameScores[i];
+                    }
+
+                    const cell = thirdRow.insertCell();
+                    cell.colSpan = 2;
+                    cell.textContent = frameScores[i];
+
+                    console.log("프레임 번호 : ", i);
+                }
+
+                // !! Frame10셀 점수 표시합니다. 
                 const totalScoreCell = thirdRow.insertCell();
                 totalScoreCell.colSpan = 3;
+
+                if (isNaN(frameScores[9])) {
+                    frameScores[9] = frameScores[8];
+                }
+
                 totalScoreCell.textContent = frameScores[frameScores.length - 1];
+
+                console.log("totalScoreCell", totalScoreCell);
+
+                // !! Total 셀에 점수 추가
+                const finalScoreCell = thirdRow.insertCell();
+                finalScoreCell.textContent = frameScores[frameScores.length - 1];
+
+                console.log("thirdRow", thirdRow);
 
                 table.appendChild(tbody);
                 targetDiv.appendChild(table); // 생성된 테이블을 페이지에 추가
