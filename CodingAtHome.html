@@ -26,24 +26,31 @@
             background-color: #ffffff;
         }
     </style>
+
 </head>
 
 <body>
     <label for="inputPlayNum">게임 수 : </label>
     <input type="text" id="inputPlayNum" placeholder="게임 수를 입력해주세요">
+
     <button onclick="showBowlingTable()">Submit</button>
 
     <!-- 볼링 점수 테이블 -->
     <div id="content"></div>
 
+
     <script>
-        // 볼링 점수를 계산하는 함수, 보너스점수와 같이. 후에 배열에 넣어줌
+
+        // 볼링 점수를 계산하는 함수
+        // - 보너스점수와 같이. 후에 배열에 넣어줌
         function calculateBowlingScore(rolls) { // 볼링점수 생성한 배열을 인자로 받음
 
             let score = 0; // 총점수
             let rollIndex = 0; // 몇번째 투구인지 총 20개거나 21개
             let frameScores = []; // 프레임 별 점수가 합산되어 완성될 배열
 
+
+            // ***** 1 ~ 9 Frame Start ! *****
             console.log("1~9프레임");
             // 1~9 프레임 까지의 점수 계산
             for (let frame = 0; frame < 9; frame++) {
@@ -58,7 +65,7 @@
 
                     //더블 스트라이크 계산
                     if (rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] + rolls[rollIndex + 5] == 10) { //현재 투구를 기준으로 다음프레임 첫투구가 10점
-                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4] + rolls[rollIndex + 5]; // 스트라이크 => 스트라이크 => 스페어
+                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; // 스트라이크 => 스트라이크 => 스페어
                         rollIndex += 2; // 스트라이크 시 다음 프레임으로
 
                     }
@@ -84,11 +91,9 @@
 
                 frameScores.push(score);
             }
+            // ***** 1 ~ 9 Frame End ! *****
 
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+            // ***** 10 Frame Start ! *****
             console.log("10프레임");
             // 10번째 프레임의 점수 계산, 10번째 프레임은 보너스 투구가 주어지고 보너스 점수는 따로 처리할 필요 없음
             if (rolls[rollIndex] + rolls[rollIndex + 1] >= 10) { // 스트라이크거나 스페어인 경우 보너스투구 까지 합산
@@ -98,6 +103,7 @@
             else { // 보너스 투구 없음. 오픈 프레임
                 score += rolls[rollIndex] + rolls[rollIndex + 1];
             }
+            // ***** 10 Frame End ! *****
 
             frameScores.push(score);
 
@@ -169,7 +175,7 @@
                 const tbody = document.createElement('tbody');
 
                 // 첫 번째 행 (프레임 표시)
-                const firstRow = tbody.insertRow();
+                const firstRow = tbody.insertRow(); // 행 추가 (1행)
                 for (let frame = 1; frame <= 10; frame++) {
                     const cell = firstRow.insertCell();
 
@@ -179,7 +185,6 @@
                     } else {
                         cell.colSpan = 2;
                     }
-
                     cell.textContent = `Frame ${frame}`;
                 }
 
@@ -187,18 +192,41 @@
                 totalCell.textContent = 'Total';
 
                 // 두 번째 행 (투구 점수)
-                const secondRow = tbody.insertRow();
-                for (let roll of scores) {  //scores 배열 길이만큼 cell에 넣어준다.
+                const secondRow = tbody.insertRow(); // 행 추가 (2행)
+                for (let roll of scores) {  //scores 배열요소만큼
                     secondRow.insertCell().textContent = roll;
                 }
 
-                // 세 번째 행 (프레임별 점수 합산)
-                const thirdRow = tbody.insertRow();
-                for (let frameScore of frameScores) {
+                //세 번째 행 (프레임별 점수 합산)
+                const thirdRow = tbody.insertRow(); // 행 추가 (3행)
+                for (let frameScore of frameScores) { //frameScores 배열요소만큼  
                     const cell = thirdRow.insertCell();
-                    cell.colSpan = 2;
+
+                    // 10번째 프레임 점수 3칸으로
+                    if (frameScores[9] == frameScore)
+                        cell.colSpan = 3;
+                    else
+                        cell.colSpan = 2;
+
                     cell.textContent = frameScore;
+                    console.log(frameScore);
                 }
+
+                // 세 번째 행 (프레임별 점수 합산)
+                // const thirdRow = tbody.insertRow(); // 행 추가 (3행)
+                // for (let i = 0; i < frameScores.length; i++) {
+                //     if (i == 9) {
+                //         const cell = thirdRow.insertCell();
+                //         cell.colSpan = 3;
+                //         cell.textContent = frameScores[i];
+                //     }
+
+                //     const cell = thirdRow.insertCell();
+                //     cell.colSpan = 2;
+                //     cell.textContent = frameScores[i];
+
+                //     console.log(i);
+                // }
 
                 // 마지막 셀에는 총점을 표시합니다.
                 const totalScoreCell = thirdRow.insertCell();
