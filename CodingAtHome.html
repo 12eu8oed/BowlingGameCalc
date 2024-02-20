@@ -38,123 +38,79 @@
 
     <script>
         // 볼링 점수를 계산하는 함수, 보너스점수와 같이. 후에 배열에 넣어줌
-        function calculateBowlingScore(rolls) { // 볼링점수 생성한 배열 인자로 받음
+        function calculateBowlingScore(rolls) { // 볼링점수 생성한 배열을 인자로 받음
 
             let score = 0; // 총점수
             let rollIndex = 0; // 몇번째 투구인지 총 20개거나 21개
             let frameScores = []; // 프레임 별 점수가 합산되어 완성될 배열
 
+            console.log("1~9프레임");
             // 1~9 프레임 까지의 점수 계산
             for (let frame = 0; frame < 9; frame++) {
-                if (rolls[rollIndex] === 10) { // 스트라이크
+                if (rolls[rollIndex] == 10) { // [스트라이크]
 
-                    //스트라이크 다음에 스트라이크가 오는 경우 예를 들어 더블이나 터키
-                    if (rolls[rollIndex + 2] + rolls[rollIndex + 3] == 10) {
+                    //터키 스트라이크 이상 계산
+                    if (rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] == 10) {
+                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; //30점 추가! 대박
+                        rollIndex += 2; // 스트라이크 시 다음 프레임으로
 
                     }
 
+                    //더블 스트라이크 계산
+                    if (rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] + rolls[rollIndex + 5] == 10) { //현재 투구를 기준으로 다음프레임 첫투구가 10점
+                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4] + rolls[rollIndex + 5]; // 스트라이크 => 스트라이크 => 스페어
+                        rollIndex += 2; // 스트라이크 시 다음 프레임으로
 
-
-                    score += 10 + rolls[rollIndex + 1] + rolls[rollIndex + 2];
-
-
+                    }
+                    score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 3];
                     rollIndex += 2; // 스트라이크 시 다음 프레임으로
-
                 }
 
-                else if (rolls[rollIndex] + rolls[rollIndex + 1] === 10) { // 스페어
+                else if (rolls[rollIndex] + rolls[rollIndex + 1] == 10) { // [스페어]
+
+                    if (rolls[rollIndex + 2] == 10) { // 스페어다음에 스트라이크가 오는 경우
+                        score += 10 + rolls[rollIndex + 2];
+                    }
+
                     score += 10 + rolls[rollIndex + 2];
                     rollIndex += 2; // 스페어 처리 후 다음 프레임으로
 
-                } 
-                
+                }
+
                 else { // 오픈 프레임
                     score += rolls[rollIndex] + rolls[rollIndex + 1];
-                    rollIndex += 2; // 다음 프레임으로
+                    rollIndex += 2; // 오픈 프레임 처리 후 프레임으로
                 }
+
                 frameScores.push(score);
             }
-            console.log("1부터9프레임까지 / ", frameScores);
 
-            // 10번째 프레임의 점수 계산
-            if (rolls[rollIndex] === 10) { // 스트라이크
-                score += 10 + rolls[rollIndex + 1] + rolls[rollIndex + 2];
-            } else if (rolls[rollIndex] + rolls[rollIndex + 1] === 10) { // 스페어
-                score += 10 + rolls[rollIndex + 2];
-            } else { // 오픈 프레임
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+            console.log("10프레임");
+            // 10번째 프레임의 점수 계산, 10번째 프레임은 보너스 투구가 주어지고 보너스 점수는 따로 처리할 필요 없음
+            if (rolls[rollIndex] + rolls[rollIndex + 1] >= 10) { // 스트라이크거나 스페어인 경우 보너스투구 까지 합산
+                score += rolls[rollIndex] + rolls[rollIndex + 1] + rolls[rollIndex + 2];
+            }
+
+            else { // 보너스 투구 없음. 오픈 프레임
                 score += rolls[rollIndex] + rolls[rollIndex + 1];
             }
+
             frameScores.push(score);
 
-            console.log("10프레임부터 / ", frameScores);
-
             return frameScores;
-
-            // //프레임은 총 10개니 10번 루프
-            // for (let frame = 0; frame < 10; frame++) {
-            //     //마지막 프레임 스트라이크 나온 경우
-            //     //마지막 프레임은 스트라이크가 3번 나올수도 있고 스트라이크가 나왔을 경우  
-
-
-            //     // 스트라이크
-            //     if (rolls[rollIndex] === 10) {
-            //         score += 10 + rolls[rollIndex + 1] + rolls[rollIndex + 2];
-            //         rollIndex += 1; //첫 투구와 두번째 점수를 계산 했으니 다음 프레임으로 넘어간다.
-
-            //         // 스페어
-            //     } else if (rolls[rollIndex] + rolls[rollIndex + 1] === 10) {
-            //         score += 10 + rolls[rollIndex + 2];
-            //         rollIndex += 2; //첫 투구와 두번째 점수를 계산 했으니 다음 프레임으로 넘어간다.
-
-            //         //오픈 프레임
-            //     } else {
-            //         score += rolls[rollIndex] + rolls[rollIndex + 1]; //첫 투구와 두 번째 투구의 합을 해당 프레임의 총점수에 넣어준다.
-            //         rollIndex += 2; //첫 투구와 두번째 점수를 계산 했으니 다음 프레임으로 넘어간다.
-            //     }
-            //     frameScores.push(score);
-            // }
-            // console.log("rolls", rolls);
-            // console.log("frameScores", frameScores);
-            // return frameScores;
         }
 
         // 볼링 점수를 생성하는 함수
         // 볼링 점수를 생성할때는 결국 맨 마지막 10프레임을 고려하려 보너스 투구를 줄 것이냐 말것이냐 결정한다.
-        // function generateBowlingScores() {
-
-        //     let rolls = [];
-        //     let firstRoll; //첫번째 투구
-        //     let secondRoll; //두번째 투구
-        //     let bonusRoll; //보너스 
-
-        //     for (let frame = 0; frame < 10; frame++) {
-        //         let firstRoll = Math.floor(Math.random() * 11); //첫 투구에 0부터 10까지의 난수를 생성해서 넣어준다.
-        //         rolls.push(firstRoll);
-
-        //         if (firstRoll === 10) {
-        //             // 스트라이크라면 두번째 투구 0으로 [10, 0]
-        //             // 마지막 프레임은 [10,10,10] 이나 [10,4,6] 이런경우도 있는데 이럴경우 어떻게 하면 좋을까??
-        //             rolls.push(0);
-        //         } else {
-        //             // 스트라이크가 아닌 경우, 두 번째 투구에 대한 점수를 추가
-        //             let secondRoll = Math.floor(Math.random() * (11 - firstRoll)); //두번째 투구는 (첫투구+두번째 투구 = 10) 이 되어야 한다. 
-        //             rolls.push(secondRoll);
-        //         }
-        //     }
-
-        //     // 10번째 프레임 보너스 투구 , 19,20번째 투구의 합이 10을 넘기면 한번더 투구하고 배열에 push
-        //     if (rolls[18] + rolls[19] >= 10) {
-        //         rolls.push(Math.floor(Math.random() * 11));
-        //     }
-
-        //     return rolls;
-        // }
-
         function generateBowlingScores() {
             let rolls = [];
             let firstRoll, secondRoll, bonusRoll;
 
-            //1부터 9프레임 처리
+            //1부터 9프레임 점수 생성
             for (let frame = 0; frame < 9; frame++) {
                 firstRoll = Math.floor(Math.random() * 11);
                 rolls.push(firstRoll);
@@ -167,26 +123,31 @@
                 }
             }
 
-            // 10번째 프레임 처리 부분
+            // 10번째 프레임 점수 생성
             firstRoll = Math.floor(Math.random() * 11);
-            // firstRoll = 10;
-
             rolls.push(firstRoll);
 
-            if (firstRoll === 10) { // 10번째 프레임에서 스트라이크
+            if (firstRoll == 10) { // 10번째 프레임에서 스트라이크 , 10번 프레임의 첫 투구가 스트라이크라면 보너스프레임으로 두번의 투구가 주어짐
 
-                secondRoll = Math.floor(Math.random() * 11);
-                rolls.push(secondRoll); // 두 번째 투구 점수 생성
-
-                //10번 프레임의 첫 투구가 스트라이크라면 보너스프레임으로 두번의 투구가 주어짐
-                bonusRoll = Math.floor(Math.random() * 11);
-                rolls.push(bonusRoll); // 보너스 투구 점수 생성
-
-            } else {
-                secondRoll = Math.floor(Math.random() * (11 - firstRoll));
+                secondRoll = Math.floor(Math.random() * 11);  // 두 번째 투구 점수 생성
                 rolls.push(secondRoll);
 
-                if (firstRoll + secondRoll === 10) { // 스페어 성공하면 보너스 투구 주어짐
+                if (secondRoll == 10) {  //두번 째투구가 스트라이크이면 보너스투구는 10개 짜리 주어진다.
+                    bonusRoll = Math.floor(Math.random() * 11);
+                }
+
+                //보너스 투구는 두번째 투구의 남은 갯수만큼 처리가능
+                bonusRoll = Math.floor(Math.random() * (11 - secondRoll));
+                rolls.push(bonusRoll); // 보너스 투구 점수 생성
+
+            }
+
+            else if (firstRoll < 10) { //스페어와 오픈 프레임 처리
+
+                secondRoll = Math.floor(Math.random() * (11 - firstRoll));
+                rolls.push(secondRoll); // 두 번째 투구 점수배열에 추가
+
+                if (firstRoll + secondRoll == 10) {
                     bonusRoll = Math.floor(Math.random() * 11);
                     rolls.push(bonusRoll); // 보너스 투구 점수 생성
                 }
@@ -201,10 +162,7 @@
 
             for (let i = 0; i < tableNum; i++) {
                 const scores = generateBowlingScores(); //볼링 점수 생성
-                console.log("scores", scores);
                 const frameScores = calculateBowlingScore(scores); //볼링 점수 배열 (쓰러트린 핀의 갯수 + 보너스 점수)
-                console.log("frameScores", frameScores);
-
 
                 // 새 테이블 요소 생성 <html>
                 const table = document.createElement('table');
@@ -255,7 +213,7 @@
         // 사용자 입력에 따라 테이블을 표시하는 함수
         function showBowlingTable() {
             const inputPlayNum = document.getElementById("inputPlayNum").value;  //사용자 입력값을 변수에 저장
-            const tableNum = parseInt(inputPlayNum); // 입력값을 숫자로 변환
+            const tableNum = parseInt(inputPlayNum); // 입력값을 숫자로 변환 (정수)
             createAndShowTables(tableNum);
 
             // if (!isNaN(tableNum)) {
