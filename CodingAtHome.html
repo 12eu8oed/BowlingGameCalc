@@ -23,7 +23,7 @@
         }
 
         th {
-            background-color: #ffffff;
+            background-color: #ffff12;
         }
     </style>
 
@@ -63,12 +63,19 @@
 
                     }
 
-                    //더블 스트라이크 계산
+                    // !! 더블 스트라이크 계산
                     if (rolls[rollIndex + 2] == 10 && rolls[rollIndex + 4] + rolls[rollIndex + 5] == 10) { //현재 투구를 기준으로 다음프레임 첫투구가 10점
                         score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; // 스트라이크 => 스트라이크 => 스페어
                         rollIndex += 2; // 스트라이크 시 다음 프레임으로
 
                     }
+
+                    // !! 더블 스트라이크 다음에 오픈 프레임이 올때
+                    if (rolls[rollIndex + 2] == 10) { //현재 투구를 기준으로 다음프레임 첫투구가 10점
+                        score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 4]; // 스트라이크 => 스트라이크 => 오픈 프레임
+                        rollIndex += 2; // 스트라이크 시 다음 프레임으로
+                    }
+
                     score += 10 + rolls[rollIndex + 2] + rolls[rollIndex + 3];
                     rollIndex += 2; // 스트라이크 시 다음 프레임으로
                 }
@@ -161,11 +168,13 @@
             return rolls;
         }
 
-        // 볼링 테이블을 생성하고 점수를 채우는 함수 
+        // !! 볼링 테이블을 생성하고 점수를 채우는 함수 
         function createAndShowTables(tableNum) {
             const targetDiv = document.getElementById('content');
             targetDiv.innerHTML = ''; // 기존 내용을 초기화, 이 코드가 없으면 기존에 테이블 태그로 만들었던 코드밑으로 테이블 생성된다.
 
+
+            // !! tableNum 값만큼 볼링점수판 생성
             for (let i = 0; i < tableNum; i++) {
 
                 // !! <br/> 추가해서 간격 띄우기
@@ -175,6 +184,7 @@
                 const gameNumDiv = document.createElement('div');
                 gameNumDiv.textContent = `게임수: ${i + 1}`; // tableNum 받아서 테이블 출력
                 gameNumDiv.style.marginBottom = '30px'; // 게임수div 와 테이블간 간격띄움
+                console.log("현재 게임 번호", i + 1);
 
                 targetDiv.appendChild(gameNumDiv);
 
@@ -190,7 +200,6 @@
                 for (let frame = 1; frame <= 10; frame++) {
                     const cell = firstRow.insertCell();
 
-                    // cell.colSpan = frame === 10 ? 3 : 2;
                     if (frame === 10) {
                         cell.colSpan = 3; //10번째 프레임일 경우 칸 3개로 만든다.
                     } else {
@@ -204,47 +213,49 @@
 
                 // 두 번째 행 (투구 점수)
                 const secondRow = tbody.insertRow(); // 행 추가 (2행 Start)
+
                 for (let roll of scores) {  //scores 배열요소만큼
                     secondRow.insertCell().textContent = roll;
                 }
 
-                //세 번째 행 (프레임별 점수 합산)
-                // const thirdRow = tbody.insertRow(); // 행 추가 (3행)
-                // for (let frameScore of frameScores) { //frameScores 배열요소만큼  
-                //     const cell = thirdRow.insertCell();
-                //     console.log("cell",cell);
+                // Total열 rowspan 을 위한 부분
+                // !! 배열요소가 20개면 빈칸 2개 생성
+                if (scores.length == 20) {
+                    console.log("점수배열 길이 : ", scores.length);
+                    secondRow.insertCell();
+                    secondRow.insertCell().textContent = frameScores[9];  // Total칸에 총합표시                
+                }
 
-                //     // 마지막 프레임 Nan오류 수정
-                //     if (isNaN(frameScore)) { 
-                //         frameScore = frameScores[frameScores.length - 1];
-                //     }
+                // !! 배열요소가 21개면 빈칸 1개 생성
+                else {
+                    console.log("점수배열 길이 : ", scores.length);
+                    secondRow.insertCell().textContent = frameScores[9]; // Total칸에 총합표시
+                }
 
-                //     // 10번째 프레임 점수 3칸으로
-                //     if (frameScores[9] == frameScore)
-                //         cell.colSpan = 3;
-                //     else
-                //         cell.colSpan = 2;
+                // 이제 2행 마지막칸 병합 하면된다!
 
-                //     cell.textContent = frameScore;
-                //     console.log(frameScore);
-                // }
 
                 // 세 번째 행 (프레임별 점수 합산)
                 const thirdRow = tbody.insertRow(); // 행 추가 (3행 Start)
 
                 for (let i = 0; i < frameScores.length - 1; i++) {
-                    if (i == 9) {
-                        const cell = thirdRow.insertCell();
-                        cell.colSpan = 3;
-                        cell.textContent = frameScores[i];
-                    }
+
+
+                    // // !! Frame 10은 3칸으로 colspan
+                    // if (i == 9) {
+                    //     const cell = thirdRow.insertCell();
+                    //     cell.colSpan = 3;
+                    //     cell.textContent = frameScores[i];
+                    // }
 
                     const cell = thirdRow.insertCell();
                     cell.colSpan = 2;
                     cell.textContent = frameScores[i];
-
-                    console.log("프레임 번호 : ", i);
                 }
+                console.log("배열 점수 합산 요소 : ", frameScores);
+
+
+
 
                 // !! Frame10셀 점수 표시합니다. 
                 const totalScoreCell = thirdRow.insertCell();
@@ -266,6 +277,12 @@
 
                 table.appendChild(tbody);
                 targetDiv.appendChild(table); // 생성된 테이블을 페이지에 추가
+
+                // !! Total 셀에서 rowspan시 밀리는 현상 제거
+                let deleteCell = table.rows[1].cells[21];
+                // console.log("**********" + lastCell.innerText);
+                deleteCell.rowSpan = 2;
+                table.rows[2].cells[10].remove();
             }
         }
 
@@ -275,12 +292,13 @@
             const tableNum = parseInt(inputPlayNum); // 입력값을 숫자로 변환 (정수)
             createAndShowTables(tableNum);
 
-            // if (!isNaN(tableNum)) {
+            if (!isNaN(tableNum)) {
 
-            // } else {
-            //     alert('게임 수를 올바른 숫자로 입력해주세요.');
-            // }
+            } else {
+                alert('게임 수를 올바른 숫자로 입력해주세요.');
+            }
         }
+
     </script>
 </body>
 
